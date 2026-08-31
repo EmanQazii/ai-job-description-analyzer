@@ -894,7 +894,7 @@ def render_bias_section(bias_flags) -> None:
                             <th>Suggested alternative</th>
                         </tr>
                     </thead>
-                    <tbody{rows_html}/>
+                    <tbody{rows_html}
                 </table>
                 """,
                 unsafe_allow_html=True,
