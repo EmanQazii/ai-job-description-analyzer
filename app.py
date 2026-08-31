@@ -872,35 +872,16 @@ def render_bias_section(bias_flags) -> None:
         )
 
         if bias_flags:
-            rows_html = ""
+            rows = []
             for flag in bias_flags:
-                phrase = escape(str(getattr(flag, "phrase", "")))
-                concern = escape(str(getattr(flag, "concern", "")))
-                alternative = escape(str(get_bias_alternative(flag)))
-                rows_html += f"""
-                <tr>
-                    <td class="jda-bias-phrase">"{phrase}"</td>
-                    <td>{concern}</td>
-                    <td class="jda-bias-alt">{alternative}</td>
-                </tr>
-                """
-            st.markdown(
-                f"""
-                <table class="jda-bias-table">
-                    <thead>
-                        <tr>
-                            <th>Phrase</th>
-                            <th>Concern</th>
-                            <th>Suggested alternative</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {rows_html}
-                    </tbody>
-                </table>
-                """,
-                unsafe_allow_html=True,
-            )
+                rows.append(
+                    {
+                        "Phrase": f'"{getattr(flag, "phrase", "")}"',
+                        "Concern": getattr(flag, "concern", ""),
+                        "Suggested alternative": get_bias_alternative(flag),
+                    }
+                )
+            st.dataframe(rows, use_container_width=True, hide_index=True)
         else:
             st.success("No potentially biased language identified.")
 
