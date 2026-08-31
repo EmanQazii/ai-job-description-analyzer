@@ -1,0 +1,27 @@
+[
+    {
+        "id": "good_soc_analyst",
+        "title": "Strong SOC Analyst JD",
+        "job_description": "We are seeking a SOC Analyst to join our Security Operations team. The analyst will monitor security events, investigate alerts, and support incident response activities to protect client environments. Responsibilities include monitoring SIEM alerts, investigating suspicious authentication and network activity, documenting incidents in the ticketing system, escalating confirmed incidents according to established procedures, and contributing to threat-hunting activities. Required qualifications include a bachelor's degree in cybersecurity, computer science, or a related field, 1-2 years of experience in a SOC or security monitoring role, understanding of TCP/IP and common attack techniques, and hands-on experience with SIEM platforms such as Splunk or Microsoft Sentinel. Familiarity with EDR platforms and scripting with Python or PowerShell is preferred. The role is hybrid and reports to the SOC Manager."
+    },
+    {
+        "id": "poor_soc_analyst",
+        "title": "Poor SOC Analyst JD",
+        "job_description": "We need a young and energetic cybersecurity ninja. You should be good at cybersecurity and able to work under pressure. You will monitor systems, handle incidents, and do other cybersecurity tasks. Good communication skills required. Bachelor's degree preferred."
+    },
+    {
+        "id": "short_jd",
+        "title": "Extremely Short JD",
+        "job_description": "Hiring a Security Analyst. Must know cybersecurity and be good at computers."
+    },
+    {
+        "id": "biased_jd",
+        "title": "Potentially Biased JD",
+        "job_description": "We are looking for a young digital native who can work long hours and be a cultural fit with our team. The ideal candidate should be a native English speaker and a recent graduate with lots of energy. Responsibilities include security monitoring and helping the team with cybersecurity work."
+    },
+    {
+        "id": "incomplete_jd",
+        "title": "Incomplete Cybersecurity JD",
+        "job_description": "Security Engineer wanted for our cybersecurity team. The candidate will help maintain security systems and support security projects. Bachelor's degree in Computer Science required. Good communication skills and knowledge of cybersecurity are necessary."
+    }
+]

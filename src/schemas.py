@@ -28,10 +28,10 @@ class ChecklistItem(BaseModel):
     item: str
     present: bool
     comment: str
+    priority: str
 
 
 class JDAnalysis(BaseModel):
-    overall_score: int = Field(ge=0, le=100)
     score_breakdown: ScoreBreakdown
     summary: str
     issues: List[Issue]

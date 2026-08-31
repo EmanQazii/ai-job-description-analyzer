@@ -16,6 +16,16 @@ if not api_key:
 
 client = genai.Client(api_key=api_key)
 
+def calculate_overall_score(score_breakdown) -> int:
+    scores = [
+        score_breakdown.clarity,
+        score_breakdown.completeness,
+        score_breakdown.specificity,
+        score_breakdown.professionalism,
+        score_breakdown.inclusivity,
+    ]
+
+    return round(sum(scores) / len(scores))
 
 def analyze_job_description(job_description: str) -> JDAnalysis:
 
@@ -42,7 +52,13 @@ JOB DESCRIPTION:
         },
     )
 
-    return JDAnalysis.model_validate_json(response.text)
+    analysis = JDAnalysis.model_validate_json(response.text)
+
+    overall_score = calculate_overall_score(
+        analysis.score_breakdown
+    )
+
+    return analysis, overall_score
 
 
 if __name__ == "__main__":
@@ -68,11 +84,10 @@ if __name__ == "__main__":
     - Ability to work in a fast-paced environment.
     """
 
-    analysis = analyze_job_description(sample_jd)
-
+    analysis, overall_score = analyze_job_description(sample_jd)
     print("\n========== JOB DESCRIPTION ANALYSIS ==========\n")
 
-    print(f"Overall Score: {analysis.overall_score}/100")
+    print(f"Overall Score: {overall_score}/100")
 
     print("\n--- Score Breakdown ---")
 
