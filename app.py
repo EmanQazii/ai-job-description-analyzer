@@ -97,7 +97,32 @@ if analyze_button:
                 st.subheader("Summary")
 
                 st.write(analysis.summary)
+                
+                st.subheader("Issues Found")
+                if analysis.issues:
+                    for issue in analysis.issues:
+                        with st.expander(
+                            f"{issue.severity} — {issue.issue}"
+                        ):
+                            st.write(
+                                f"**Category:** {issue.category}"
+                            )
+                            st.write(
+                                f"**Explanation:** {issue.explanation}"
+                            )
+                            st.write(
+                                f"**Suggested Fix:** {issue.suggestion}"
+                            )
+                else:
+                    st.success("No significant issues were identified.")
 
+                st.subheader("Suggested Improvements")
+                if analysis.recommendations:
+                    for recommendation in analysis.recommendations:
+                        st.write(f"- {recommendation}")
+                else:
+                    st.info("No additional recommendations were generated.")
+                    
             except Exception as error:
 
                 st.error(
