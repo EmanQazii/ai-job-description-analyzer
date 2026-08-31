@@ -68,6 +68,7 @@ TOP_RECOMMENDATIONS_COUNT = 5
 
 st.set_page_config(
     page_title=f"{APP_NAME} | AI Job Description Analyzer",
+    page_icon="🛡️",
     layout="wide",
 )
 
@@ -89,7 +90,7 @@ def inject_styles() -> None:
             --color-muted: #64748B;
             --color-border: #E2E8F0;
             --color-card: #FFFFFF;
-            --color-page: #FFFFFF;
+            --color-page: #F8FAFC;
             --color-good-bg: #F0FDF4;
             --color-good-text: #15803D;
             --color-high-bg: #FEF2F2;
@@ -107,60 +108,40 @@ def inject_styles() -> None:
         }
 
         body, .stApp {
-            background: linear-gradient(180deg, #FFFFFF 0%, #F9FAFB 52%, #FFFFFF 100%);
-            background-attachment: fixed;
+            background-color: var(--color-page);
             color: var(--color-text);
         }
 
-        /* Header — brand banner */
+        /* Header */
         .jda-header {
-            display: flex;
-            align-items: center;
-            gap: 1.1rem;
-            background: linear-gradient(135deg, var(--color-navy) 0%, #1E3A8A 55%, #1D4ED8 100%);
-            border-radius: 14px;
-            padding: 1.6rem 1.9rem;
-            margin-bottom: 1.75rem;
-            box-shadow: 0 10px 28px rgba(15, 23, 42, 0.22);
-        }
-        .jda-brand-icon {
-            font-size: 2rem;
-            line-height: 1;
-            background: rgba(255, 255, 255, 0.12);
-            border-radius: 12px;
-            padding: 0.55rem 0.7rem;
-            flex-shrink: 0;
+            padding-bottom: 1.25rem;
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid var(--color-border);
         }
         .jda-header h1 {
-            font-size: 1.55rem;
-            font-weight: 800;
-            color: #FFFFFF;
+            font-size: 1.65rem;
+            font-weight: 700;
+            color: var(--color-navy);
             margin: 0 0 0.3rem 0;
             letter-spacing: -0.01em;
         }
         .jda-header p {
-            font-size: 0.92rem;
-            color: #BFDBFE;
+            font-size: 0.95rem;
+            color: var(--color-muted);
             margin: 0;
         }
 
-        /* Streamlit native bordered container == our "card".
-           Everything rendered inside `with st.container(border=True):`
-           lands inside this single real DOM node, so mixed content
-           (markdown + expanders + columns + widgets) is genuinely
-           wrapped — no more empty divs. */
-        div[data-testid="stVerticalBlockBorderWrapper"] {
-            background: var(--color-card) !important;
-            border: 1px solid var(--color-border) !important;
-            border-radius: 12px !important;
-            box-shadow: 0 1px 3px rgba(15, 23, 42, 0.05);
+        /* Generic section card */
+        .jda-card {
+            background: var(--color-card);
+            border: 1px solid var(--color-border);
+            border-radius: 10px;
+            padding: 1.5rem;
             margin-bottom: 1.25rem;
         }
-        div[data-testid="stVerticalBlockBorderWrapper"] > div[data-testid="stVerticalBlock"] {
-            gap: 0.5rem;
-            padding: 1.4rem 1.5rem 1.5rem 1.5rem;
+        .jda-card-tight {
+            padding: 1.1rem 1.5rem;
         }
-
         .jda-section-title {
             font-size: 0.78rem;
             font-weight: 700;
@@ -690,12 +671,10 @@ def get_demo_analysis():
 
 def render_header() -> None:
     st.markdown(
-        f"""
+        """
         <div class="jda-header">
-            <div>
-                <h1>{APP_NAME}</h1>
-                <p>{APP_TAGLINE}</p>
-            </div>
+            <h1>AI Job Description Analyzer</h1>
+            <p>Evaluate, improve, and strengthen your cybersecurity job descriptions.</p>
         </div>
         """,
         unsafe_allow_html=True,
@@ -703,29 +682,26 @@ def render_header() -> None:
 
 
 def render_input_section():
-    with st.container(border=True):
-        st.markdown(
-            '<div class="jda-section-title" style="--accent:#1D4ED8;">Job Description</div>',
-            unsafe_allow_html=True,
-        )
-        st.markdown(
-            '<div class="jda-helper-text">Paste the complete job description you want to evaluate.</div>',
-            unsafe_allow_html=True,
-        )
+    st.markdown('<div class="jda-card">', unsafe_allow_html=True)
+    st.markdown('<div class="jda-section-title">Job Description</div>', unsafe_allow_html=True)
+    st.markdown(
+        '<div class="jda-helper-text">Paste the complete job description you want to evaluate.</div>',
+        unsafe_allow_html=True,
+    )
 
-        job_description = st.text_area(
-            label="Job description input",
-            height=280,
-            placeholder="Paste a cybersecurity job description here...",
-            label_visibility="collapsed",
-        )
+    job_description = st.text_area(
+        label="Job description input",
+        height=280,
+        placeholder="Paste a cybersecurity job description here...",
+        label_visibility="collapsed",
+    )
 
-        analyze_clicked = st.button(
-            "Analyze Job Description",
-            type="primary",
-            use_container_width=True,
-        )
-
+    analyze_clicked = st.button(
+        "Analyze Job Description",
+        type="primary",
+        use_container_width=True,
+    )
+    st.markdown("</div>", unsafe_allow_html=True)
     return job_description, analyze_clicked
 
 
@@ -781,40 +757,35 @@ def render_score_breakdown(score_breakdown) -> None:
         ("Inclusivity", score_breakdown.inclusivity),
     ]
 
-    with st.container(border=True):
-        st.markdown(
-            '<div class="jda-section-title" style="--accent:#1D4ED8;">Score Breakdown</div>',
-            unsafe_allow_html=True,
-        )
+    st.markdown('<div class="jda-card">', unsafe_allow_html=True)
+    st.markdown('<div class="jda-section-title">Score Breakdown</div>', unsafe_allow_html=True)
 
-        rows_html = ""
-        for name, value in dimensions:
-            width = max(0, min(100, int(value)))
-            color = score_bar_color(width)
-            rows_html += f"""
-            <div class="jda-bar-row">
-                <div class="jda-bar-top">
-                    <span class="name">{name}</span>
-                    <span class="value">{width}/100</span>
-                </div>
-                <div class="jda-bar-track">
-                    <div class="jda-bar-fill" style="width:{width}%; background:{color};"></div>
-                </div>
+    rows_html = ""
+    for name, value in dimensions:
+        width = max(0, min(100, int(value)))
+        rows_html += f"""
+        <div class="jda-bar-row">
+            <div class="jda-bar-top">
+                <span class="name">{name}</span>
+                <span class="value">{width}/100</span>
             </div>
-            """
-        st.markdown(rows_html, unsafe_allow_html=True)
+            <div class="jda-bar-track">
+                <div class="jda-bar-fill" style="width:{width}%;"></div>
+            </div>
+        </div>
+        """
+    st.markdown(rows_html, unsafe_allow_html=True)
+    st.markdown("</div>", unsafe_allow_html=True)
 
 
 def render_summary(summary: str) -> None:
-    with st.container(border=True):
-        st.markdown(
-            '<div class="jda-section-title" style="--accent:#0F172A;">Summary</div>',
-            unsafe_allow_html=True,
-        )
-        st.markdown(
-            f'<div style="font-size: 0.92rem; line-height: 1.6; color: var(--color-text);">{summary}</div>',
-            unsafe_allow_html=True,
-        )
+    st.markdown('<div class="jda-card">', unsafe_allow_html=True)
+    st.markdown('<div class="jda-section-title">Summary</div>', unsafe_allow_html=True)
+    st.markdown(
+        f'<div style="max-width: 720px; font-size: 0.92rem; line-height: 1.6; color: var(--color-text); margin-bottom: 1.5rem;">{summary}</div>',
+        unsafe_allow_html=True,
+    )
+    st.markdown("</div>", unsafe_allow_html=True)
 
 
 def render_finding_card(issue) -> None:
@@ -836,205 +807,216 @@ def render_finding_card(issue) -> None:
 
 
 def render_key_findings(issues) -> None:
-    with st.container(border=True):
-        st.markdown(
-            '<div class="jda-section-title" style="--accent:#B91C1C;">Key Findings</div>',
-            unsafe_allow_html=True,
-        )
+    st.markdown('<div class="jda-card">', unsafe_allow_html=True)
+    st.markdown('<div class="jda-section-title">Key Findings</div>', unsafe_allow_html=True)
 
-        if not issues:
-            st.success("No significant issues were identified.")
-            return
+    if not issues:
+        st.success("No significant issues were identified.")
+        st.markdown("</div>", unsafe_allow_html=True)
+        return
 
-        ordered = sorted_issues(issues)
-        visible = ordered[:TOP_FINDINGS_COUNT]
-        remaining = ordered[TOP_FINDINGS_COUNT:]
+    ordered = sorted_issues(issues)
+    visible = ordered[:TOP_FINDINGS_COUNT]
+    remaining = ordered[TOP_FINDINGS_COUNT:]
 
-        for issue in visible:
-            render_finding_card(issue)
+    for issue in visible:
+        render_finding_card(issue)
 
-        if remaining:
-            with st.expander(f"View all {len(ordered)} findings"):
-                for issue in remaining:
-                    render_finding_card(issue)
+    if remaining:
+        with st.expander(f"View all {len(ordered)} findings"):
+            for issue in remaining:
+                render_finding_card(issue)
+
+    st.markdown("</div>", unsafe_allow_html=True)
 
 
 def render_bias_section(bias_flags) -> None:
-    with st.container(border=True):
-        st.markdown(
-            '<div class="jda-section-title" style="--accent:#7C3AED;">Bias &amp; Inclusivity</div>',
-            unsafe_allow_html=True,
-        )
-        st.markdown(
-            '<div class="jda-section-subtitle">Potentially exclusionary or subjective '
-            'language identified in the JD.</div>',
-            unsafe_allow_html=True,
-        )
+    st.markdown('<div class="jda-card">', unsafe_allow_html=True)
+    st.markdown('<div class="jda-section-title">Bias &amp; Inclusivity</div>', unsafe_allow_html=True)
+    st.markdown(
+        '<div class="jda-section-subtitle">Potentially exclusionary or subjective '
+        'language identified in the JD.</div>',
+        unsafe_allow_html=True,
+    )
 
-        if bias_flags:
-            rows = []
-            for flag in bias_flags:
-                rows.append(
-                    {
-                        "Phrase": f'"{getattr(flag, "phrase", "")}"',
-                        "Concern": getattr(flag, "concern", ""),
-                        "Suggested alternative": get_bias_alternative(flag),
-                    }
-                )
-            st.dataframe(rows, use_container_width=True, hide_index=True)
-        else:
-            st.success("No potentially biased language identified.")
-
-
-def render_checklist(checklist) -> None:
-    with st.container(border=True):
-        st.markdown(
-            '<div class="jda-section-title" style="--accent:#15803D;">JD Quality Checklist</div>',
-            unsafe_allow_html=True,
-        )
-
-        essential = [i for i in checklist if str(i.priority).lower() == "essential"]
-        recommended = [i for i in checklist if str(i.priority).lower() != "essential"]
-        essential_done = sum(1 for i in essential if i.present)
-        recommended_done = sum(1 for i in recommended if i.present)
-
+    if bias_flags:
+        rows_html = ""
+        for flag in bias_flags:
+            phrase = escape(str(getattr(flag, "phrase", "")))
+            concern = escape(str(getattr(flag, "concern", "")))
+            alternative = escape(str(get_bias_alternative(flag)))
+            rows_html += f"""
+            <tr>
+                <td class="jda-bias-phrase">"{phrase}"</td>
+                <td>{concern}</td>
+                <td class="jda-bias-alt">{alternative}</td>
+            </tr>
+            """
         st.markdown(
             f"""
-            <div class="jda-check-summary-grid">
-                <div class="jda-check-summary-box">
-                    <div class="jda-check-summary-label">Essential Criteria</div>
-                    <div class="jda-check-summary-value">{essential_done} / {len(essential)} complete</div>
-                </div>
-                <div class="jda-check-summary-box">
-                    <div class="jda-check-summary-label">Recommended Criteria</div>
-                    <div class="jda-check-summary-value">{recommended_done} / {len(recommended)} complete</div>
-                </div>
-            </div>
+            <table class="jda-bias-table">
+                <thead>
+                    <tr>
+                        <th>Phrase</th>
+                        <th>Concern</th>
+                        <th>Suggested alternative</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {rows_html}
+                </tbody>
+            </table>
             """,
             unsafe_allow_html=True,
         )
+    else:
+        st.success("No potentially biased language identified.")
 
-        cols = st.columns(2)
-        for index, item in enumerate(checklist):
-            icon, icon_class = ("✓", "present") if item.present else ("–", "missing")
-            with cols[index % 2]:
-                st.markdown(
-                    f"""
-                    <div class="jda-check-row">
-                        <div class="jda-check-icon {icon_class}">{icon}</div>
-                        <div>
-                            <div class="jda-check-title">{item.item}</div>
-                            <div class="jda-check-priority">{item.priority}</div>
-                        </div>
+    st.markdown("</div>", unsafe_allow_html=True)
+
+
+def render_checklist(checklist) -> None:
+    st.markdown('<div class="jda-card">', unsafe_allow_html=True)
+    st.markdown('<div class="jda-section-title">JD Quality Checklist</div>', unsafe_allow_html=True)
+
+    essential = [i for i in checklist if str(i.priority).lower() == "essential"]
+    recommended = [i for i in checklist if str(i.priority).lower() != "essential"]
+    essential_done = sum(1 for i in essential if i.present)
+    recommended_done = sum(1 for i in recommended if i.present)
+
+    st.markdown(
+        f"""
+        <div class="jda-check-summary-grid">
+            <div class="jda-check-summary-box">
+                <div class="jda-check-summary-label">Essential Criteria</div>
+                <div class="jda-check-summary-value">{essential_done} / {len(essential)} complete</div>
+            </div>
+            <div class="jda-check-summary-box">
+                <div class="jda-check-summary-label">Recommended Criteria</div>
+                <div class="jda-check-summary-value">{recommended_done} / {len(recommended)} complete</div>
+            </div>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+
+    cols = st.columns(2)
+    for index, item in enumerate(checklist):
+        icon, icon_class = ("✓", "present") if item.present else ("–", "missing")
+        with cols[index % 2]:
+            st.markdown(
+                f"""
+                <div class="jda-check-row">
+                    <div class="jda-check-icon {icon_class}">{icon}</div>
+                    <div>
+                        <div class="jda-check-title">{item.item}</div>
+                        <div class="jda-check-priority">{item.priority}</div>
                     </div>
-                    """,
-                    unsafe_allow_html=True,
-                )
-                with st.expander("Details", expanded=False):
-                    st.markdown(item.comment)
+                </div>
+                """,
+                unsafe_allow_html=True,
+            )
+            with st.expander("Details", expanded=False):
+                st.markdown(item.comment)
+
+    st.markdown("</div>", unsafe_allow_html=True)
 
 
 def render_priority_actions(recommendations) -> None:
-    with st.container(border=True):
-        st.markdown(
-            '<div class="jda-section-title" style="--accent:#1E3A8A;">Priority Actions</div>',
-            unsafe_allow_html=True,
-        )
+    st.markdown('<div class="jda-card">', unsafe_allow_html=True)
+    st.markdown('<div class="jda-section-title">Priority Actions</div>', unsafe_allow_html=True)
 
-        if not recommendations:
-            st.info("No additional recommendations were generated.")
-            return
+    if not recommendations:
+        st.info("No additional recommendations were generated.")
+        st.markdown("</div>", unsafe_allow_html=True)
+        return
 
-        visible = recommendations[:TOP_RECOMMENDATIONS_COUNT]
-        remaining = recommendations[TOP_RECOMMENDATIONS_COUNT:]
+    visible = recommendations[:TOP_RECOMMENDATIONS_COUNT]
+    remaining = recommendations[TOP_RECOMMENDATIONS_COUNT:]
 
-        def action_row(index: int, text: str) -> str:
-            return f"""
-            <div class="jda-action-row">
-                <div class="jda-action-number">{index:02d}</div>
-                <div class="jda-action-detail">{text}</div>
-            </div>
-            """
+    def action_row(index: int, text: str) -> str:
+        return f"""
+        <div class="jda-action-row">
+            <div class="jda-action-number">{index:02d}</div>
+            <div class="jda-action-detail">{text}</div>
+        </div>
+        """
 
-        rows_html = "".join(action_row(i, text) for i, text in enumerate(visible, start=1))
-        st.markdown(rows_html, unsafe_allow_html=True)
+    rows_html = "".join(action_row(i, text) for i, text in enumerate(visible, start=1))
+    st.markdown(rows_html, unsafe_allow_html=True)
 
-        if remaining:
-            with st.expander(f"View all {len(recommendations)} recommendations"):
-                rows_html = "".join(
-                    action_row(i, text)
-                    for i, text in enumerate(remaining, start=len(visible) + 1)
-                )
-                st.markdown(rows_html, unsafe_allow_html=True)
+    if remaining:
+        with st.expander(f"View all {len(recommendations)} recommendations"):
+            rows_html = "".join(
+                action_row(i, text)
+                for i, text in enumerate(remaining, start=len(visible) + 1)
+            )
+            st.markdown(rows_html, unsafe_allow_html=True)
+
+    st.markdown("</div>", unsafe_allow_html=True)
 
 
 def render_improved_jd(improved_jd: str) -> None:
     if not improved_jd:
         return
 
-    with st.container(border=True):
-        st.markdown(
-            '<div class="jda-section-title" style="--accent:#0D9488;">Improved Job Description</div>',
-            unsafe_allow_html=True,
-        )
-        st.markdown(
-            '<div class="jda-section-subtitle">Example revision based on the identified issues.</div>',
-            unsafe_allow_html=True,
-        )
+    st.markdown('<div class="jda-card">', unsafe_allow_html=True)
+    st.markdown('<div class="jda-section-title">Improved Job Description</div>', unsafe_allow_html=True)
+    st.markdown(
+        '<div class="jda-section-subtitle">Example revision based on the identified issues.</div>',
+        unsafe_allow_html=True,
+    )
 
-        st.markdown(f'<div class="jda-improved-box">{improved_jd}</div>', unsafe_allow_html=True)
+    st.markdown(f'<div class="jda-improved-box">{improved_jd}</div>', unsafe_allow_html=True)
 
-        st.markdown(
-            """
-            <div class="jda-disclaimer">
-                <b>Review before publishing:</b> This is an AI-generated example.
-                Verify and customize responsibilities, qualifications,
-                technologies, work arrangements, and other requirements to match
-                your organization's actual needs.
-            </div>
-            """,
-            unsafe_allow_html=True,
-        )
+    st.markdown(
+        """
+        <div class="jda-disclaimer">
+            <b>Review before publishing:</b> This is an AI-generated example.
+            Verify and customize responsibilities, qualifications,
+            technologies, work arrangements, and other requirements to match
+            your organization's actual needs.
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
 
-        # Lightweight copy-to-clipboard button. No extra dependency: uses the
-        # browser clipboard API directly via a small embedded component.
-        # This is a native iframe element — it now also lives inside the
-        # same st.container(border=True) box as everything else above, so
-        # it renders visually nested instead of floating below a dead div.
-        escaped = (
-            improved_jd.replace("\\", "\\\\")
-            .replace("`", "\\`")
-            .replace("</", "<\\/")
-        )
-        components.html(
-            f"""
-            <div style="margin-top: 0.75rem;">
-                <button id="jda-copy-btn" style="
-                    background: #1D4ED8; color: #fff; border: none;
-                    border-radius: 6px; padding: 0.5rem 1rem; font-size: 0.85rem;
-                    font-weight: 600; cursor: pointer; font-family: inherit;">
-                    Copy Improved JD
-                </button>
-                <span id="jda-copy-status" style="
-                    margin-left: 0.6rem; font-size: 0.82rem; color: #15803D;"></span>
-            </div>
-            <script>
-            const jdText = `{escaped}`;
-            const btn = document.getElementById("jda-copy-btn");
-            const status = document.getElementById("jda-copy-status");
-            btn.addEventListener("click", async () => {{
-                try {{
-                    await navigator.clipboard.writeText(jdText);
-                    status.textContent = "Copied";
-                    setTimeout(() => {{ status.textContent = ""; }}, 2000);
-                }} catch (err) {{
-                    status.textContent = "Copy failed — select and copy manually";
-                }}
-            }});
-            </script>
-            """,
-            height=50,
-        )
+    escaped = (
+        improved_jd.replace("\\", "\\\\")
+        .replace("`", "\\`")
+        .replace("</", "<\\/")
+    )
+    components.html(
+        f"""
+        <div style="margin-top: 0.75rem;">
+            <button id="jda-copy-btn" style="
+                background: #1D4ED8; color: #fff; border: none;
+                border-radius: 6px; padding: 0.5rem 1rem; font-size: 0.85rem;
+                font-weight: 600; cursor: pointer; font-family: inherit;">
+                Copy Improved JD
+            </button>
+            <span id="jda-copy-status" style="
+                margin-left: 0.6rem; font-size: 0.82rem; color: #15803D;"></span>
+        </div>
+        <script>
+        const jdText = `{escaped}`;
+        const btn = document.getElementById("jda-copy-btn");
+        const status = document.getElementById("jda-copy-status");
+        btn.addEventListener("click", async () => {{
+            try {{
+                await navigator.clipboard.writeText(jdText);
+                status.textContent = "Copied";
+                setTimeout(() => {{ status.textContent = ""; }}, 2000);
+            }} catch (err) {{
+                status.textContent = "Copy failed — select and copy manually";
+            }}
+        }});
+        </script>
+        """,
+        height=50,
+    )
+
+    st.markdown("</div>", unsafe_allow_html=True)
 
 
 def render_empty_state() -> None:
