@@ -17,6 +17,9 @@ def main():
     print("=" * 70)
     print("AI JOB DESCRIPTION ANALYZER - TEST SUITE")
     print("=" * 70)
+    
+    passed = 0 
+    failed = 0
 
     for test_case in test_cases:
 
@@ -44,10 +47,38 @@ def main():
             for item in result.checklist:
                 status = "PASS" if item.present else "MISSING"
                 print(f"  [{status}] {item.item}")
+            
+            print("\nImproved JD:") 
+            if result.improved_jd and result.improved_jd.strip(): 
+                print(" [PASS] Improved JD generated") 
+                print(f" Length: {len(result.improved_jd)} characters") 
+            else: 
+                print(" [FAIL] Improved JD is missing") 
+                failed += 1 
+                continue 
+             # Basic validation 
+            if overall_score < 0 or overall_score > 100: 
+                print(" [FAIL] Overall score outside 0-100 range") 
+                failed += 1 
+                continue 
+            
+            print("\nResult: PASS") 
+            passed += 1 
 
         except Exception as error:
             print(f"ERROR: {error}")
-
+            failed += 1
+    print("\n") 
+    print("=" * 70) 
+    print("TEST SUMMARY") 
+    print("=" * 70) 
+    print(f"Passed: {passed}") 
+    print(f"Failed: {failed}") 
+    print(f"Total: {passed + failed}") 
+    if failed > 0: 
+        print("\nSome tests failed.") 
+    else: 
+        print("\nAll tests passed.")
 
 if __name__ == "__main__":
     main()

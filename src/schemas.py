@@ -11,9 +11,9 @@ class ScoreBreakdown(BaseModel):
 
 
 class Issue(BaseModel):
-    issue: str
-    category: str
+    title: str
     severity: str
+    category: List[str]
     explanation: str
     suggestion: str
 
@@ -21,14 +21,14 @@ class Issue(BaseModel):
 class BiasFlag(BaseModel):
     phrase: str
     concern: str
-    suggested_alternative: str
+    alternative: str
 
 
 class ChecklistItem(BaseModel):
     item: str
     present: bool
-    comment: str
     priority: str
+    comment: str
 
 
 class JDAnalysis(BaseModel):
@@ -38,3 +38,4 @@ class JDAnalysis(BaseModel):
     bias_flags: List[BiasFlag]
     checklist: List[ChecklistItem]
     recommendations: List[str]
+    improved_jd: str

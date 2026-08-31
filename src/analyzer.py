@@ -27,6 +27,18 @@ def calculate_overall_score(score_breakdown) -> int:
 
     return round(sum(scores) / len(scores))
 
+def get_quality_label(score: int) -> str:
+    if score >= 90:
+        return "Excellent"
+    elif score >= 75:
+        return "Good"
+    elif score >= 60:
+        return "Fair"
+    elif score >= 40:
+        return "Needs Improvement"
+    else:
+        return "Poor"
+
 def analyze_job_description(job_description: str) -> JDAnalysis:
 
     if not job_description.strip():
@@ -85,9 +97,12 @@ if __name__ == "__main__":
     """
 
     analysis, overall_score = analyze_job_description(sample_jd)
+    quality_label = get_quality_label(overall_score)
+
     print("\n========== JOB DESCRIPTION ANALYSIS ==========\n")
 
     print(f"Overall Score: {overall_score}/100")
+    print(f"Quality Label: {quality_label}")
 
     print("\n--- Score Breakdown ---")
 
