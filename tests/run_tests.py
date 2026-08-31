@@ -2,11 +2,7 @@ import json
 import sys
 from pathlib import Path
 
-# Allow imports from src/
-sys.path.append(str(Path(__file__).resolve().parents[1] / "src"))
-
-from analyzer import analyze_job_description
-
+from src.analyzer import analyze_job_description
 
 def load_test_cases():
     test_file = Path(__file__).parent / "test_cases.json"

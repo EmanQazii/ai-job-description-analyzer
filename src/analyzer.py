@@ -3,8 +3,8 @@ import os
 from dotenv import load_dotenv
 from google import genai
 
-from schemas import JDAnalysis
-from prompts import SYSTEM_INSTRUCTION
+from src.schemas import JDAnalysis
+from src.prompts import SYSTEM_INSTRUCTION
 
 
 load_dotenv()
