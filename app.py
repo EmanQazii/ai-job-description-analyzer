@@ -812,7 +812,7 @@ def render_summary(summary: str) -> None:
             unsafe_allow_html=True,
         )
         st.markdown(
-            f'<div style="font-size: 0.92rem; line-height: 1.6; color: var(--color-text);">{summary}</div>',
+            f'<div style="font-size: 0.92rem; line-height: 1.6; color: var(--color-text); padding-bottom: 0.6rem;">{summary}</div>',
             unsafe_allow_html=True,
         )
 
